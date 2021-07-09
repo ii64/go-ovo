@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export GOHOME=$HOME/go
+export PATH=$GOHOME/bin:$PATH
+make generate
