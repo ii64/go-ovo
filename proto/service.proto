@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+package ovo;
+
+// https://cloud.google.com/endpoints/docs/grpc/transcoding
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "github.com/mwitkow/go-proto-validators/validator.proto";
+
+option go_package = "github.com/ii64/go-ovo;gen";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "OVO API unofficial";
+        version: "1.0";
+        description: "Reversed edition";
+        license: {
+            name: "Apache";
+            url: "https://www.apache.org/licenses/LICENSE-2.0";
+        };
+    };
+    schemes: HTTPS;
+};
+
+// Enable custom Marshal method.
+option (gogoproto.marshaler_all) = true;
+// Enable custom Unmarshal method.
+option (gogoproto.unmarshaler_all) = true;
+// Enable custom Size method (Required by Marshal and Unmarshal).
+option (gogoproto.sizer_all) = true;
+// Enable registration with golang/protobuf for the grpc-gateway.
+option (gogoproto.goproto_registration) = true;
+// Enable generation of XXX_MessageName methods for grpc-go/status.
+option (gogoproto.messagename_all) = true;
+
+/*
+|  Enums
+*/
+enum st {
+    sd = 0;
+    sc = 1;
+}
+
+
+/*
+|  Structs
+*/
+message Login2FARequest {
+    string deviceId = 1;
+    string mobile = 2;
+}
+message Login2FAResponse {
+    string refId = 1;
+}
+//
+message Login2FAVerifyRequest {
+    string deviceId = 1;
+    string mobile = 2;
+    string refId = 3;
+    string appVersion = 4;
+    string macAddress = 5;
+    string osName = 6;
+    string osVersion = 7;
+    string pushNotificationId = 8;
+    string verificationCode = 9;
+}
+message Login2FAVerifyResponse {
+    string mobile = 1;
+    string email = 2;
+    string fullName = 3;
+    bool isEmailVerified = 4;
+    bool isSecurityCodeSet = 5;
+    string updateAccessToken = 6;
+}
+//
+message LoginSecurityCodeRequest {
+    int64 deviceUnixtime = 1;
+    string securityCode = 2;
+    string updateAccessToken = 3;
+    string message = 4;
+}
+message LoginSecurityCodeResponse {
+    string token = 1;
+    string tokenSeed = 2;
+    int64 timestamp = 3; // originally timeStamp with upper case S ???
+    int64 tokenSeedExpiredAt = 4;
+    string displayMessage = 5;
+    //email = 6
+    //fullName = 7
+    bool isEmailVerified = 8;
+    string updateAccessToken = 9;
+}
+//
+message Budget {
+    int64 amount = 1;
+}
+message GetBudgetRequest {}
+message GetBudgetResponse {
+    Budget budget = 1;
+    int64 totalSpending = 2;
+    //cycleDate ?
+    repeated Budget summary = 3;
+}
+//
+message Balance {
+    int64 card_balance = 1;
+    string card_no = 2;
+}
+message GetFrontRequest {
+}
+message GetFrontResponse {
+    
+}
+//
+
+
+/*
+|  Services
+*/
+service PrimaryService {
+    rpc login2FA(Login2FARequest) returns (Login2FAResponse) {
+        option (google.api.http) = {
+            post: "/v2.0/api/auth/customer/login2FA"
+            body: "*"
+        };
+    }
+    rpc Login2FAVerify(Login2FAVerifyRequest) returns (Login2FAVerifyResponse) {
+        option (google.api.http) = {
+            post: "/v2.0/api/auth/customer/login2FA/verify"
+            body: "*"
+        };
+    }
+    rpc LoginSecurityCode(LoginSecurityCodeRequest) returns (LoginSecurityCodeResponse) {
+        option (google.api.http) = {
+            post: "/v2.0/api/auth/customer/loginSecurityCode/verify"
+            body: "*"
+        };
+    }
+    rpc getBudget(GetBudgetRequest) returns (GetBudgetResponse) {
+        option (google.api.http) = {
+            get: "/v1.0/budget/detail"
+        };
+    }
+
+    rpc getFront(GetFrontRequest) returns (GetFrontResponse) {
+        option (google.api.http) = {
+            get: "/v1.0/api/front"
+        };
+    }
+}
+
+service GatewayService {
+
+}

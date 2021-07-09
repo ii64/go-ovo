@@ -1,0 +1,351 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OVO API unofficial",
+    "description": "Reversed edition",
+    "version": "1.0",
+    "license": {
+      "name": "Apache",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1.0/api/front": {
+      "get": {
+        "operationId": "PrimaryService_getFront",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ovoGetFrontResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "PrimaryService"
+        ]
+      }
+    },
+    "/v1.0/budget/detail": {
+      "get": {
+        "operationId": "PrimaryService_getBudget",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ovoGetBudgetResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "PrimaryService"
+        ]
+      }
+    },
+    "/v2.0/api/auth/customer/login2FA": {
+      "post": {
+        "operationId": "PrimaryService_login2FA",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ovoLogin2FAResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ovoLogin2FARequest"
+            }
+          }
+        ],
+        "tags": [
+          "PrimaryService"
+        ]
+      }
+    },
+    "/v2.0/api/auth/customer/login2FA/verify": {
+      "post": {
+        "operationId": "PrimaryService_Login2FAVerify",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ovoLogin2FAVerifyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ovoLogin2FAVerifyRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PrimaryService"
+        ]
+      }
+    },
+    "/v2.0/api/auth/customer/loginSecurityCode/verify": {
+      "post": {
+        "operationId": "PrimaryService_LoginSecurityCode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ovoLoginSecurityCodeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ovoLoginSecurityCodeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PrimaryService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ovoBudget": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "ovoGetBudgetResponse": {
+      "type": "object",
+      "properties": {
+        "budget": {
+          "$ref": "#/definitions/ovoBudget"
+        },
+        "totalSpending": {
+          "type": "string",
+          "format": "int64"
+        },
+        "summary": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ovoBudget"
+          },
+          "title": "cycleDate ?"
+        }
+      }
+    },
+    "ovoGetFrontResponse": {
+      "type": "object"
+    },
+    "ovoLogin2FARequest": {
+      "type": "object",
+      "properties": {
+        "deviceId": {
+          "type": "string"
+        },
+        "mobile": {
+          "type": "string"
+        }
+      },
+      "title": "|  Structs"
+    },
+    "ovoLogin2FAResponse": {
+      "type": "object",
+      "properties": {
+        "refId": {
+          "type": "string"
+        }
+      }
+    },
+    "ovoLogin2FAVerifyRequest": {
+      "type": "object",
+      "properties": {
+        "deviceId": {
+          "type": "string"
+        },
+        "mobile": {
+          "type": "string"
+        },
+        "refId": {
+          "type": "string"
+        },
+        "appVersion": {
+          "type": "string"
+        },
+        "macAddress": {
+          "type": "string"
+        },
+        "osName": {
+          "type": "string"
+        },
+        "osVersion": {
+          "type": "string"
+        },
+        "pushNotificationId": {
+          "type": "string"
+        },
+        "verificationCode": {
+          "type": "string"
+        }
+      }
+    },
+    "ovoLogin2FAVerifyResponse": {
+      "type": "object",
+      "properties": {
+        "mobile": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "isEmailVerified": {
+          "type": "boolean"
+        },
+        "isSecurityCodeSet": {
+          "type": "boolean"
+        },
+        "updateAccessToken": {
+          "type": "string"
+        }
+      }
+    },
+    "ovoLoginSecurityCodeRequest": {
+      "type": "object",
+      "properties": {
+        "deviceUnixtime": {
+          "type": "string",
+          "format": "int64"
+        },
+        "securityCode": {
+          "type": "string"
+        },
+        "updateAccessToken": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "ovoLoginSecurityCodeResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "tokenSeed": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "int64"
+        },
+        "tokenSeedExpiredAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "displayMessage": {
+          "type": "string"
+        },
+        "isEmailVerified": {
+          "type": "boolean",
+          "title": "email = 6\r\nfullName = 7"
+        },
+        "updateAccessToken": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
